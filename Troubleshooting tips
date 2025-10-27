@@ -1,0 +1,55 @@
+## 🛠️ Troubleshooting Tips
+
+If you run into issues while setting up or running the DevOps Demo App, here are some common problems and solutions:
+
+### 1. Docker Build Issues
+- **Problem:** `docker build` fails or hangs.  
+  **Solution:** Ensure Docker Desktop is running and that your terminal has permission to access Docker. Verify your Dockerfile is in the project root and named correctly (`Dockerfile`).
+
+### 2. Minikube Not Starting
+- **Problem:** `minikube start` fails.  
+  **Solution:** Check that virtualization is enabled (Hyper-V, VirtualBox, or WSL2 depending on your setup). Ensure there is enough memory and CPU allocated for Minikube.
+
+### 3. Pods Stuck in ImagePullBackOff or ErrImagePull
+- **Problem:** Kubernetes pods fail to start with `ImagePullBackOff`.  
+  **Solution:**  
+  - Make sure the Docker image is loaded into Minikube:  
+    ```bash
+    minikube image load devops-demo-app
+    ```
+  - If using a private registry, ensure credentials are set up.
+
+### 4. Service Not Accessible
+- **Problem:** `minikube service devops-demo-deployment` fails or the browser shows nothing.  
+  **Solution:**  
+  - Check pods are running:  
+    ```bash
+    kubectl get pods
+    ```  
+  - Verify the service is exposed correctly:  
+    ```bash
+    kubectl get services
+    ```
+  - Ensure you are using the correct NodePort URL provided by Minikube.
+
+### 5. Application Crashes or Restarting
+- **Problem:** Pods are repeatedly restarting.  
+  **Solution:**  
+  - Check pod logs for errors:  
+    ```bash
+    kubectl logs <pod-name>
+    ```
+  - Make sure your Node.js app is listening on the correct port (3000) and that `app.js` is error-free.
+  - Verify resource limits are not too restrictive in `deployment.yaml`.
+
+### 6. Liveness/Readiness Probe Failures
+- **Problem:** Kubernetes marks pods as `NotReady`.  
+  **Solution:**  
+  - Check probe paths and ports match your application (`/` on port 3000).  
+  - Adjust `initialDelaySeconds` and `periodSeconds` in your `deployment.yaml` if the app needs more startup time.
+
+### 7. General Debugging
+- Check overall cluster status:  
+  ```bash
+  minikube status
+  kubectl get all
