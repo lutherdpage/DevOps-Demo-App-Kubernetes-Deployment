@@ -1,0 +1,33 @@
+
+- **app.js** – Node.js application code
+- **package.json** – Node.js project metadata and dependencies
+- **Dockerfile** – Instructions for building the Docker image
+- **deployment.yaml** – Kubernetes Deployment configuration with probes, resource limits, and scaling
+- **README.md** – Project documentation
+
+---
+
+## ⚙️ Setup & Run Locally
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/lutherdpage/DevOps-Demo-App-Kubernetes-Deployment.git
+cd DevOps-Demo-App-Kubernetes-Deployment
+
+docker build -t devops-demo-app .
+
+docker images
+
+minikube image load devops-demo-app
+
+kubectl apply -f deployment.yaml
+kubectl expose deployment devops-demo-deployment --type=NodePort --port=3000
+
+kubectl get pods -o wide
+kubectl get services
+
+minikube service devops-demo-deployment --url
+
+kubectl scale deployment devops-demo-deployment --replicas=<number_of_replicas>
+kubectl get pods -o wide
+
